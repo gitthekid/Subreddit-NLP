@@ -1,118 +1,23 @@
-{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "The purpose of this project is to ask the question:\n",
-    "\n",
-    "Can we develop a machine learning model that can predict, using Natural Language Processing, what subreddit a post originated from, given two similar options: the EDM subreddit, and the HipHopHeads subreddit? Both subreddits are centered around contemporary music genres, and I am interested to see how effectively a model can distinguish between two subreddits this similar.\n",
-    "\n",
-    "\n",
-    "\n",
-    "My process followed this order:\n",
-    "Scraping and Importing Data\n",
-    "Cleaning Data\n",
-    "Pre-Processing Data\n",
-    "Instantiating and Fitting Model\n",
-    "Iteratively Searching for the Most Effective Predictive Model\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "Scraping and Importing Data\n",
-    "Using the Pushshit API, I collected the html code for two different subreddits:\n",
-    "reddit.com/r/edm\n",
-    "reddit.com/r/hiphopheads\n",
-    "I then scraped information about 11,000 posts from each subreddit. Many features were scraped, but the only two relevant to this project are the Titles of reddit posts, and the body text or 'SelfText' of the reddit posts.\n",
-    "\n",
-    "\n",
-    "\n",
-    "Cleaning Data\n",
-    "After converting the scraped data from each subreddit into separate dataframes, I checked for null values.\n",
-    "Finding less than 50 in each data frame, I dropped rows containing these values.\n",
-    "I then identified any very common words in the dataframes that might cause me some problems in modeling. Primarily I came across '[removed]' and urls. I decided the best course of action would be to add these to stop words when count vectorizing.\n",
-    "\n",
-    "\n",
-    "\n",
-    "Pre-Processing Data\n",
-    "I added a column “from edm subreddit” to both dataframes, to identify which subreddit the information was from.\n",
-    "1 for edm\n",
-    "0 for hiphopheads\n",
-    "I actually added a \"from hiphopheads subreddit\" to both columns at first, and by the time I realized that was unnecessary they were already in the dataframes. As such, I left in this useless column.\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "Fitting Model\n",
-    "The X feature of this model, or the feature I am using to predict with, is a concatenated column of a post’s Title and ‘Selftext’.\n",
-    "The Y feature, or the feature I am trying to predict, is the column I added previously:\n",
-    "\"from edm subreddit\"\n",
-    "\n",
-    "\n",
-    "Count Vectorization\n",
-    "I instantiated a Count Vectorizer, a method to count the number instances of every word in my X features.\n",
-    "The stop words I instantiated it to avoid were normal english stop words, as well as the problem words we identified earlier. That is: 'removed' and url words such as 'http' and 'com'.\n",
-    "My count vectorizer function was acting up for a while, returning a dataframe with the dimension [1,2]. So, I spent a while troubleshooting, and I realized it wouldn't work because I had put double brackets around my X_train when fitting the train test split.\n",
-    "\n",
-    "\n",
-    "Null Model\n",
-    "I next identified the null model. The classes seem to be more or less balanced, with .52 being from the edm subreddit, and .48 being from the hiphopheads subreddit. My model should outperform the null model.\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "Iteratively Searching for the Most Effective Predictive Model\n",
-    "I first fit a bayes model on another X_train, as I count vectorized again when instantiating the pipeline. I ran a gridsearch on some hyperparameters, which I tweaked for a couple of times, and got an accuacy of 70%. The train score .78, and test score was .7, so there was not too much variance, and the bias of this model was medium.\n",
-    "I decided to run a few more models to try and improve my Naive Bayes Model's score. Next I ran a bags model, where I gridsearched through hyperparamters, and still got a very horrible accuracy score of 0.52. The true positives (sensitivity) was near 100%, while the true negatives (specificity) was near 0%, which would seem to indicate a class imbalance, and the model predicting the majority class. However, the classes were not really that imbalanced, so I am not sure exactly what made the model go wrong. I adjusted hyperparameters a bit, but ended up moving onto another model after getting dismal results.\n",
-    "The final model I ran was random forest classifier, gridsearched through hyperparameters, and iteratively tweaked them. The model returned an accuracy of 63%, a train score of .63 and a test score of .63, indicating the model was very low variance but high bias. It is better than the null model, but worse than the Bayes model.\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "Conclusions\n",
-    "My Naive Bayes model had a predictive accuracy of about 70%. This is statistically significant enough to say that we have created a model that can predict better than random chance, what subreddit a given post originated from.\n",
-    "Given the highly correlated nature of the subreddits, this is not too bad. However, the model is still less effective than I would have liked. \n",
-    "\n",
-    "\n",
-    "\n",
-    "Ways to Improve Model\n",
-    "To improve my model in the future I could:\n",
-    "Lemmatize.\n",
-    "Add more words to stop words, particularly those ones that are most shared between subreddits.\n",
-    "Run more models, in particular voting classifier.\n",
-    "Tinker with hyperparameters.\n",
-    "Fit X_train on more features, including posting time.\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.8.5"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
-}
+The purpose of this project is to ask the question:
+
+Can we develop a machine learning model that can predict, using Natural Language Processing, what subreddit a post originated from, given two similar options: the EDM subreddit, and the HipHopHeads subreddit? Both subreddits are centered around contemporary music genres, and I am interested to see how effectively a model can distinguish between two subreddits this similar.
+
+My process followed this order: Scraping and Importing Data Cleaning Data Pre-Processing Data Instantiating and Fitting Model Iteratively Searching for the Most Effective Predictive Model
+
+Scraping and Importing Data Using the Pushshit API, I collected the html code for two different subreddits: reddit.com/r/edm reddit.com/r/hiphopheads I then scraped information about 11,000 posts from each subreddit. Many features were scraped, but the only two relevant to this project are the Titles of reddit posts, and the body text or 'SelfText' of the reddit posts.
+
+Cleaning Data After converting the scraped data from each subreddit into separate dataframes, I checked for null values. Finding less than 50 in each data frame, I dropped rows containing these values. I then identified any very common words in the dataframes that might cause me some problems in modeling. Primarily I came across '[removed]' and urls. I decided the best course of action would be to add these to stop words when count vectorizing.
+
+Pre-Processing Data I added a column “from edm subreddit” to both dataframes, to identify which subreddit the information was from. 1 for edm 0 for hiphopheads I actually added a "from hiphopheads subreddit" to both columns at first, and by the time I realized that was unnecessary they were already in the dataframes. As such, I left in this useless column.
+
+Fitting Model The X feature of this model, or the feature I am using to predict with, is a concatenated column of a post’s Title and ‘Selftext’. The Y feature, or the feature I am trying to predict, is the column I added previously: "from edm subreddit"
+
+Count Vectorization I instantiated a Count Vectorizer, a method to count the number instances of every word in my X features. The stop words I instantiated it to avoid were normal english stop words, as well as the problem words we identified earlier. That is: 'removed' and url words such as 'http' and 'com'. My count vectorizer function was acting up for a while, returning a dataframe with the dimension [1,2]. So, I spent a while troubleshooting, and I realized it wouldn't work because I had put double brackets around my X_train when fitting the train test split.
+
+Null Model I next identified the null model. The classes seem to be more or less balanced, with .52 being from the edm subreddit, and .48 being from the hiphopheads subreddit. My model should outperform the null model.
+
+Iteratively Searching for the Most Effective Predictive Model I first fit a bayes model on another X_train, as I count vectorized again when instantiating the pipeline. I ran a gridsearch on some hyperparameters, which I tweaked for a couple of times, and got an accuacy of 70%. The train score .78, and test score was .7, so there was not too much variance, and the bias of this model was medium. I decided to run a few more models to try and improve my Naive Bayes Model's score. Next I ran a bags model, where I gridsearched through hyperparamters, and still got a very horrible accuracy score of 0.52. The true positives (sensitivity) was near 100%, while the true negatives (specificity) was near 0%, which would seem to indicate a class imbalance, and the model predicting the majority class. However, the classes were not really that imbalanced, so I am not sure exactly what made the model go wrong. I adjusted hyperparameters a bit, but ended up moving onto another model after getting dismal results. The final model I ran was random forest classifier, gridsearched through hyperparameters, and iteratively tweaked them. The model returned an accuracy of 63%, a train score of .63 and a test score of .63, indicating the model was very low variance but high bias. It is better than the null model, but worse than the Bayes model.
+
+Conclusions My Naive Bayes model had a predictive accuracy of about 70%. This is statistically significant enough to say that we have created a model that can predict better than random chance, what subreddit a given post originated from. Given the highly correlated nature of the subreddits, this is not too bad. However, the model is still less effective than I would have liked.
+
+Ways to Improve Model To improve my model in the future I could: Lemmatize. Add more words to stop words, particularly those ones that are most shared between subreddits. Run more models, in particular voting classifier. Tinker with hyperparameters. Fit X_train on more features, including posting time.
